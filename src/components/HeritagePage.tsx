@@ -27,6 +27,7 @@ type Action =
   | { type: "AI_REPLIED"; content: string; phase: ConversationPhase }
   | { type: "ANALYSIS_DONE"; analysis: HeritageAnalysis }
   | { type: "ERROR"; error: string }
+  | { type: "CLEAR_ERROR" }
   | { type: "RESET" };
 
 const initial: State = {
@@ -68,6 +69,8 @@ function reducer(state: State, action: Action): State {
       return { ...state, phase: "done", analysis: action.analysis, isLoading: false };
     case "ERROR":
       return { ...state, isLoading: false, error: action.error };
+    case "CLEAR_ERROR":
+      return { ...state, error: null };
     case "RESET":
       return initial;
     default:
@@ -103,6 +106,10 @@ export default function HeritagePage() {
           body: JSON.stringify({ sessionId: state.sessionId, userMessage: text }),
         });
         const data = await res.json();
+        if (!res.ok || !data.assistantMessage) {
+          dispatch({ type: "ERROR", error: data.error ?? "Something went wrong. Please try again." });
+          return;
+        }
         dispatch({ type: "AI_REPLIED", content: data.assistantMessage, phase: data.phase });
         if (data.phase === "analysing") {
           await runAnalysis(state.sessionId!);
@@ -129,13 +136,28 @@ export default function HeritagePage() {
   }
 
   if (state.error) {
+    const canRetry = state.phase === "questioning" && state.sessionId !== null;
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-400 mb-4">{state.error}</p>
-          <button onClick={() => dispatch({ type: "RESET" })} className="text-slate-400 underline text-sm">
-            Start over
-          </button>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center max-w-sm w-full shadow-2xl">
+          <div className="text-3xl mb-4">⚠️</div>
+          <p className="text-red-400 mb-6 text-sm leading-relaxed">{state.error}</p>
+          <div className="flex gap-3 justify-center">
+            {canRetry && (
+              <button
+                onClick={() => dispatch({ type: "CLEAR_ERROR" })}
+                className="bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 hover:bg-indigo-600/30 text-sm font-medium px-4 py-2 rounded-xl transition-all duration-200"
+              >
+                Try again
+              </button>
+            )}
+            <button
+              onClick={() => dispatch({ type: "RESET" })}
+              className="bg-white/5 border border-white/10 text-gray-400 hover:text-white text-sm font-medium px-4 py-2 rounded-xl transition-all duration-200"
+            >
+              Start over
+            </button>
+          </div>
         </div>
       </div>
     );

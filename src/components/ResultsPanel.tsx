@@ -13,28 +13,58 @@ interface Props {
 
 export default function ResultsPanel({ name, analysis, onReset }: Props) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="text-4xl mb-3">🌍</div>
-          <h2 className="text-2xl font-bold text-white">
-            Heritage of {name.firstName} {name.lastName}
+    <div className="min-h-screen bg-gray-950 p-4 md:p-8 relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full bg-violet-600/15 blur-3xl pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30 mb-5 text-3xl">
+            🌍
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 tracking-tight">
+            Heritage of{" "}
+            <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+              {name.firstName} {name.lastName}
+            </span>
           </h2>
-          <p className="text-slate-400 text-sm mt-1">Name origin analysis</p>
+          <p className="text-gray-500 text-sm">AI-powered name origin analysis</p>
         </div>
+
+        {/* Results grid */}
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-slate-50 rounded-2xl p-5">
+          {/* Breakdown card */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+            <h3 className="text-white font-semibold text-sm uppercase tracking-widest mb-5 flex items-center gap-2">
+              <span className="w-1.5 h-4 rounded-full bg-gradient-to-b from-indigo-500 to-violet-500 inline-block" />
+              Name Breakdown
+            </h3>
             <NameBreakdown analysis={analysis} />
           </div>
-          <div className="rounded-2xl overflow-hidden" style={{ minHeight: "400px" }}>
-            <HeritageMap pins={analysis.pins} />
+
+          {/* Map card */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl" style={{ minHeight: "420px" }}>
+            <div className="px-6 pt-5 pb-3">
+              <h3 className="text-white font-semibold text-sm uppercase tracking-widest flex items-center gap-2">
+                <span className="w-1.5 h-4 rounded-full bg-gradient-to-b from-emerald-500 to-teal-500 inline-block" />
+                Origin Map
+              </h3>
+            </div>
+            <div className="flex-1 h-[360px]">
+              <HeritageMap pins={analysis.pins} />
+            </div>
           </div>
         </div>
-        <div className="text-center mt-6">
+
+        {/* Footer */}
+        <div className="text-center mt-8">
           <button
             onClick={onReset}
-            className="text-slate-400 hover:text-white text-sm transition-colors underline underline-offset-2"
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-all duration-200 hover:scale-105 group"
           >
+            <span className="group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
             Analyse another name
           </button>
         </div>

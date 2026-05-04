@@ -1,6 +1,10 @@
 import type { Session } from "@/types";
 
-const store = new Map<string, Session>();
+// Persist across Next.js hot reloads in dev mode
+const g = global as typeof globalThis & { _sessionStore?: Map<string, Session> };
+if (!g._sessionStore) g._sessionStore = new Map();
+const store = g._sessionStore;
+
 const TTL = 30 * 60 * 1000;
 
 export function setSession(session: Session) {
