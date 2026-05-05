@@ -3,7 +3,11 @@ import { getSession, setSession } from "@/lib/sessionStore";
 import { getClient } from "@/lib/anthropic";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import { MOCK_QUESTIONS } from "@/lib/mockResponses";
-import type { ConversationPhase } from "@/types";
+import type { ConversationPhase, ParsedName } from "@/types";
+
+function buildNameString(name: ParsedName): string {
+  return [name.firstName, ...(name.middleNames ?? []), name.lastName].join(" ");
+}
 
 export async function POST(req: NextRequest) {
   const { sessionId, userMessage }: { sessionId: string; userMessage: string } =
@@ -34,7 +38,7 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "user",
-          content: `My name is ${session.name.firstName} ${session.name.lastName}.`,
+          content: `My name is ${buildNameString(session.name)}.`,
         },
         ...session.messages,
       ],

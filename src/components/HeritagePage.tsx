@@ -22,7 +22,7 @@ interface State {
 
 type Action =
   | { type: "SUBMIT_NAME"; name: ParsedName }
-  | { type: "SESSION_CREATED"; sessionId: string; firstMessage: string }
+  | { type: "SESSION_CREATED"; sessionId: string; firstMessage: string; phase: ConversationPhase }
   | { type: "USER_SENT"; content: string }
   | { type: "AI_REPLIED"; content: string; phase: ConversationPhase }
   | { type: "ANALYSIS_DONE"; analysis: HeritageAnalysis }
@@ -47,10 +47,12 @@ function reducer(state: State, action: Action): State {
     case "SESSION_CREATED":
       return {
         ...state,
-        phase: "questioning",
+        phase: action.phase,
         sessionId: action.sessionId,
-        messages: [{ role: "assistant", content: action.firstMessage }],
-        isLoading: false,
+        messages: action.firstMessage
+          ? [{ role: "assistant", content: action.firstMessage }]
+          : [],
+        isLoading: action.phase === "analysing",
       };
     case "USER_SENT":
       return {
@@ -81,6 +83,20 @@ function reducer(state: State, action: Action): State {
 export default function HeritagePage() {
   const [state, dispatch] = useReducer(reducer, initial);
 
+  async function runAnalysis(sessionId: string) {
+    try {
+      const res = await fetch("/api/analyse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = await res.json();
+      dispatch({ type: "ANALYSIS_DONE", analysis: data.analysis });
+    } catch {
+      dispatch({ type: "ERROR", error: "Failed to produce analysis." });
+    }
+  }
+
   const submitName = useCallback(async (name: ParsedName) => {
     dispatch({ type: "SUBMIT_NAME", name });
     try {
@@ -90,7 +106,15 @@ export default function HeritagePage() {
         body: JSON.stringify({ name }),
       });
       const data = await res.json();
-      dispatch({ type: "SESSION_CREATED", sessionId: data.sessionId, firstMessage: data.firstMessage });
+      dispatch({
+        type: "SESSION_CREATED",
+        sessionId: data.sessionId,
+        firstMessage: data.firstMessage,
+        phase: data.phase ?? "questioning",
+      });
+      if (data.phase === "analysing") {
+        await runAnalysis(data.sessionId);
+      }
     } catch {
       dispatch({ type: "ERROR", error: "Failed to start session." });
     }
@@ -120,20 +144,6 @@ export default function HeritagePage() {
     },
     [state.sessionId]
   );
-
-  async function runAnalysis(sessionId: string) {
-    try {
-      const res = await fetch("/api/analyse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId }),
-      });
-      const data = await res.json();
-      dispatch({ type: "ANALYSIS_DONE", analysis: data.analysis });
-    } catch {
-      dispatch({ type: "ERROR", error: "Failed to produce analysis." });
-    }
-  }
 
   if (state.error) {
     const canRetry = state.phase === "questioning" && state.sessionId !== null;

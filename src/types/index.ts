@@ -3,6 +3,7 @@ export type ConfidenceLevel = "high" | "medium" | "low";
 
 export interface ParsedName {
   firstName: string;
+  middleNames?: string[];
   lastName: string;
 }
 

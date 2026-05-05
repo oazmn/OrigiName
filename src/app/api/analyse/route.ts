@@ -4,6 +4,11 @@ import { getClient } from "@/lib/anthropic";
 import { SYSTEM_PROMPT, buildAnalysisPrompt } from "@/lib/prompts";
 import { parseAnalysis } from "@/lib/parseAnalysis";
 import { MOCK_ANALYSIS } from "@/lib/mockResponses";
+import type { ParsedName } from "@/types";
+
+function buildNameString(name: ParsedName): string {
+  return [name.firstName, ...(name.middleNames ?? []), name.lastName].join(" ");
+}
 
 export async function POST(req: NextRequest) {
   const { sessionId }: { sessionId: string } = await req.json();
@@ -22,7 +27,7 @@ export async function POST(req: NextRequest) {
     messages: [
       {
         role: "user",
-        content: `My name is ${session.name.firstName} ${session.name.lastName}.`,
+        content: `My name is ${buildNameString(session.name)}.`,
       },
       ...session.messages,
       { role: "user", content: buildAnalysisPrompt() },
