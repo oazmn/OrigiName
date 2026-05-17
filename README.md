@@ -27,3 +27,12 @@ Each game is three rounds. For every round:
 
 ### Scoring
 Distance is computed between your pin and the culture's reference coordinates. A perfect pin scores 1000, roughly 2,770 km off scores about 500, and a guess on the wrong continent usually lands in the low double digits. Max total across three rounds: 3,000.
+
+### Sources
+Claude generates the names under the following rules:
+
+- The name must be a real, authentic name used in ${culture.name} culture
+- Avoid internationally famous names (no celebrity names, heads of state, etc.)
+- Use a common given name that a typical person from this culture might have
+- "meaning" must contain ONLY the semantic meaning in plain English — what concept, quality, or imagery the name represents. NEVER include in "meaning": any language name (e.g. Arabic, Sanskrit, Hebrew, Turkish, Japanese), any country or city name, any region or continent name, any ethnic or cultural group name, or directional geographic terms (e.g. Eastern, West African). Bad example: "From Arabic, meaning radiant light." Good example: "Evokes the imagery of radiant, shining light."
+- "notes" may include full context — country, region, language origin, cultural tradition — since it is only shown to the player after they have already submitted their guess
