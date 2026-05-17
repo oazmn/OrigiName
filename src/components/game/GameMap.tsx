@@ -63,7 +63,6 @@ interface GameMapProps {
 
 export default function GameMap({ guessPin, revealPin, onMapClick }: GameMapProps) {
   const mapRef = useRef<L.Map | null>(null);
-
   return (
     <div className="h-full w-full relative">
       <MapContainer
@@ -76,6 +75,8 @@ export default function GameMap({ guessPin, revealPin, onMapClick }: GameMapProp
         scrollWheelZoom
         doubleClickZoom
         worldCopyJump
+        maxBounds={[[-85.051129, -Infinity], [85.051129, Infinity]]}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"

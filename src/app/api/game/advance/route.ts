@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getGame, setGame } from "@/lib/gameStore";
 import { generateName } from "@/lib/gameUtils";
 import { rateLimit, getIp } from "@/lib/rateLimit";
+import { isValidGameId } from "@/lib/validation";
 import type { GameRound } from "@/types/game";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(req: NextRequest) {
   const ip = getIp(req);
@@ -14,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const { gameId } = await req.json();
 
-    if (typeof gameId !== "string" || !UUID.test(gameId))
+    if (!isValidGameId(gameId))
       return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
 
     const game = getGame(gameId);
@@ -32,13 +31,13 @@ export async function POST(req: NextRequest) {
     }
 
     const culture = game.cultures[game.currentRound];
-    const { name, meaning, notes } = await generateName(culture);
+    const { name, pronunciation, meaning, notes } = await generateName(culture);
 
-    const nextRound: GameRound = { culture, name, meaning, notes };
+    const nextRound: GameRound = { culture, name, pronunciation, meaning, notes };
     game.rounds.push(nextRound);
     setGame(game);
 
-    return NextResponse.json({ roundNumber: game.currentRound + 1, name, meaning });
+    return NextResponse.json({ roundNumber: game.currentRound + 1, name, pronunciation, meaning });
   } catch (err) {
     console.error("[game/advance]", err);
     return NextResponse.json({ error: "Failed to load next round." }, { status: 500 });

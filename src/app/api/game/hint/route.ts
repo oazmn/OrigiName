@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGame, setGame } from "@/lib/gameStore";
 import { rateLimit, getIp } from "@/lib/rateLimit";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isValidGameId } from "@/lib/validation";
 
 function broadContinent(region: string): string {
   if (region.includes("Africa")) return "Africa";
@@ -20,7 +19,7 @@ export async function POST(req: NextRequest) {
   try {
     const { gameId } = await req.json();
 
-    if (typeof gameId !== "string" || !UUID.test(gameId))
+    if (!isValidGameId(gameId))
       return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
 
     const game = getGame(gameId);

@@ -17,9 +17,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const cultures = getRandomCultures(TOTAL_ROUNDS);
-    const { name, meaning, notes } = await generateName(cultures[0]);
+    const { name, pronunciation, meaning, notes } = await generateName(cultures[0]);
 
-    const firstRound: GameRound = { culture: cultures[0], name, meaning, notes };
+    const firstRound: GameRound = { culture: cultures[0], name, pronunciation, meaning, notes };
     const gameId = uuid();
 
     setGame({
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       createdAt: Date.now(),
     });
 
-    return NextResponse.json({ gameId, name, meaning });
+    return NextResponse.json({ gameId, name, pronunciation, meaning });
   } catch (err) {
     console.error("[game/start]", err);
     return NextResponse.json({ error: "Failed to start game." }, { status: 500 });

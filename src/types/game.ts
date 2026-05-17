@@ -18,6 +18,7 @@ export type GamePhase =
 export interface GameRound {
   culture: Culture;
   name: string;
+  pronunciation: string;
   meaning: string;
   notes: string;
   hintUsed?: boolean;

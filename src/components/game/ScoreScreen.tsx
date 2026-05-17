@@ -1,5 +1,6 @@
 import type { CompletedRound } from "@/types/game";
 import { TOTAL_ROUNDS } from "@/lib/gameConstants";
+import { scoreColor, scoreBg } from "@/lib/scoreUtils";
 import LegalFooter from "@/components/LegalFooter";
 
 interface Props {
@@ -17,17 +18,6 @@ function getGrade(pct: number): { letter: string; label: string; gradient: strin
   return              { letter: "D", label: "Keep Practising",  gradient: "from-gray-400 to-gray-500" };
 }
 
-function scoreColor(s: number) {
-  if (s >= 700) return "text-emerald-400";
-  if (s >= 400) return "text-amber-400";
-  return "text-red-400";
-}
-
-function scoreBg(s: number) {
-  if (s >= 700) return "bg-emerald-500/10 border-emerald-500/20";
-  if (s >= 400) return "bg-amber-500/10 border-amber-500/20";
-  return "bg-red-500/10 border-red-500/20";
-}
 
 export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, onHome }: Props) {
   const maxScore = TOTAL_ROUNDS * 1000;
