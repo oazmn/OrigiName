@@ -1,15 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGame, setGame, haversineKm, calculateScore, HINT_SCORE_CAP } from "@/lib/gameStore";
+import { rateLimit, getIp } from "@/lib/rateLimit";
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(req: NextRequest) {
+  const ip = getIp(req);
+  if (!rateLimit(`submit:${ip}`, 10, 60_000))
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+
   try {
-    const { gameId, lat, lng }: { gameId: string; lat: number; lng: number } = await req.json();
+    const body = await req.json();
+    const { gameId, lat, lng } = body;
+
+    if (typeof gameId !== "string" || !UUID.test(gameId))
+      return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
+
+    if (
+      typeof lat !== "number" || typeof lng !== "number" ||
+      !isFinite(lat) || !isFinite(lng) ||
+      lat < -90 || lat > 90 || lng < -180 || lng > 180
+    )
+      return NextResponse.json({ error: "Invalid coordinates." }, { status: 400 });
 
     const game = getGame(gameId);
     if (!game) return NextResponse.json({ error: "Game not found." }, { status: 404 });
 
     const round = game.rounds[game.currentRound];
     if (!round) return NextResponse.json({ error: "Round not found." }, { status: 400 });
+
+    if (round.score !== undefined)
+      return NextResponse.json({ error: "Round already submitted." }, { status: 409 });
 
     const distanceKm = haversineKm(lat, lng, round.culture.lat, round.culture.lng);
     const rawScore = calculateScore(distanceKm);

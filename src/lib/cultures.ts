@@ -85,7 +85,26 @@ export const CULTURES: Culture[] = [
   { id: "romanian", name: "Romanian", region: "Eastern Europe", lat: 45.5, lng: 25.0 },
 ];
 
+const CULTURE_GROUPS: Record<string, string[]> = {
+  africa: ["igbo", "yoruba", "akan", "wolof", "hausa", "mandinka", "fula", "amharic", "swahili", "zulu", "shona", "luganda", "somali", "egyptian-arabic", "amazigh"],
+  europe: ["germanic", "scandinavian", "slavic-east", "slavic-west", "celtic", "italian", "iberian", "greek", "basque", "hungarian", "baltic", "romanian"],
+  middleEast: ["gulf-arabic", "persian", "hebrew", "turkish", "kurdish", "armenian", "georgian"],
+  southEastAsia: ["hindi-sanskrit", "bengali", "tamil", "punjabi", "nepali", "sinhala", "urdu-pakistan", "javanese", "malay", "filipino", "thai", "vietnamese", "khmer", "burmese"],
+  eastCentralAsia: ["chinese", "japanese", "korean", "mongolian", "kazakh", "uzbek"],
+  americasPacific: ["nahuatl", "quechua", "mapuche", "guarani", "maori", "hawaiian", "samoan"],
+};
+
+const CULTURE_BY_ID = Object.fromEntries(CULTURES.map((c) => [c.id, c]));
+
 export function getRandomCultures(n: number): Culture[] {
-  const shuffled = [...CULTURES].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, n);
+  const groups = Object.values(CULTURE_GROUPS);
+  const shuffledGroups = [...groups].sort(() => Math.random() - 0.5);
+
+  const result: Culture[] = [];
+  for (let i = 0; i < n; i++) {
+    const group = shuffledGroups[i % shuffledGroups.length];
+    const id = group[Math.floor(Math.random() * group.length)];
+    result.push(CULTURE_BY_ID[id]);
+  }
+  return result;
 }

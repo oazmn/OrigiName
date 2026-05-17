@@ -1,10 +1,30 @@
 import type { GameSession } from "@/types/game";
 
-const g = global as typeof globalThis & { _gameStore?: Map<string, GameSession> };
+const g = global as typeof globalThis & {
+  _gameStore?: Map<string, GameSession>;
+  _gameStoreSweep?: ReturnType<typeof setInterval>;
+};
+
 if (!g._gameStore) g._gameStore = new Map();
 const store = g._gameStore;
 
-const TTL = 60 * 60 * 1000;
+const TTL = 60 * 60 * 1000; // 1 hour
+const SESSION_CAP = 10_000;
+
+if (!g._gameStoreSweep) {
+  g._gameStoreSweep = setInterval(() => {
+    const now = Date.now();
+    for (const [id, session] of store) {
+      if (now - session.createdAt > TTL) store.delete(id);
+    }
+  }, 5 * 60 * 1000);
+  // Don't prevent process exit
+  g._gameStoreSweep.unref?.();
+}
+
+export function storeFull(): boolean {
+  return store.size >= SESSION_CAP;
+}
 
 export function setGame(game: GameSession) {
   store.set(game.id, game);

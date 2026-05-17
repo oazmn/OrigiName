@@ -2,6 +2,7 @@
 import { useReducer, useCallback } from "react";
 import dynamic from "next/dynamic";
 import ScoreScreen from "./ScoreScreen";
+import LegalFooter from "@/components/LegalFooter";
 import type { GamePhase, RoundResult, CompletedRound } from "@/types/game";
 import { TOTAL_ROUNDS } from "@/lib/gameConstants";
 
@@ -12,6 +13,7 @@ interface GameState {
   gameId: string | null;
   roundNumber: number;
   currentName: string | null;
+  nameMeaning: string | null;
   guessPin: { lat: number; lng: number } | null;
   roundResult: RoundResult | null;
   totalScore: number;
@@ -23,12 +25,12 @@ interface GameState {
 
 type Action =
   | { type: "START" }
-  | { type: "GAME_LOADED"; gameId: string; name: string }
+  | { type: "GAME_LOADED"; gameId: string; name: string; meaning: string }
   | { type: "MAP_CLICKED"; lat: number; lng: number }
   | { type: "SUBMIT" }
   | { type: "ROUND_RESULT"; result: RoundResult }
   | { type: "ADVANCE" }
-  | { type: "NEXT_ROUND_LOADED"; roundNumber: number; name: string }
+  | { type: "NEXT_ROUND_LOADED"; roundNumber: number; name: string; meaning: string }
   | { type: "GAME_OVER" }
   | { type: "HINT_LOADING" }
   | { type: "HINT_RECEIVED"; hint: string }
@@ -40,6 +42,7 @@ const initial: GameState = {
   gameId: null,
   roundNumber: 1,
   currentName: null,
+  nameMeaning: null,
   guessPin: null,
   roundResult: null,
   totalScore: 0,
@@ -54,7 +57,7 @@ function reducer(state: GameState, action: Action): GameState {
     case "START":
       return { ...initial, phase: "loading" };
     case "GAME_LOADED":
-      return { ...initial, phase: "guessing", gameId: action.gameId, roundNumber: 1, currentName: action.name };
+      return { ...initial, phase: "guessing", gameId: action.gameId, roundNumber: 1, currentName: action.name, nameMeaning: action.meaning };
     case "MAP_CLICKED":
       if (state.phase !== "guessing") return state;
       return { ...state, guessPin: { lat: action.lat, lng: action.lng } };
@@ -85,6 +88,7 @@ function reducer(state: GameState, action: Action): GameState {
         phase: "guessing",
         roundNumber: action.roundNumber,
         currentName: action.name,
+        nameMeaning: action.meaning,
         guessPin: null,
         roundResult: null,
         hint: null,
@@ -128,7 +132,7 @@ export default function GamePage() {
       const res = await fetch("/api/game/start", { method: "POST" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      dispatch({ type: "GAME_LOADED", gameId: data.gameId, name: data.name });
+      dispatch({ type: "GAME_LOADED", gameId: data.gameId, name: data.name, meaning: data.meaning ?? "" });
     } catch {
       dispatch({ type: "ERROR", error: "Failed to start game. Please try again." });
     }
@@ -169,7 +173,7 @@ export default function GamePage() {
       if (data.done) {
         dispatch({ type: "GAME_OVER" });
       } else {
-        dispatch({ type: "NEXT_ROUND_LOADED", roundNumber: data.roundNumber, name: data.name });
+        dispatch({ type: "NEXT_ROUND_LOADED", roundNumber: data.roundNumber, name: data.name, meaning: data.meaning ?? "" });
       }
     } catch {
       dispatch({ type: "ERROR", error: "Failed to load next round. Please try again." });
@@ -198,7 +202,8 @@ export default function GamePage() {
       <ScoreScreen
         totalScore={state.totalScore}
         completedRounds={state.completedRounds}
-        onPlayAgain={() => dispatch({ type: "RESET" })}
+        onPlayAgain={startGame}
+        onHome={() => dispatch({ type: "RESET" })}
       />
     );
   }
@@ -275,14 +280,7 @@ export default function GamePage() {
             Play →
           </button>
 
-          <div className="mt-6">
-            <a
-              href="/"
-              className="text-gray-600 hover:text-gray-400 text-sm transition-colors duration-200"
-            >
-              ← Home
-            </a>
-          </div>
+          <LegalFooter />
         </div>
       </div>
     );
@@ -359,6 +357,7 @@ export default function GamePage() {
       {/* ── Map area ── */}
       <div className="flex-1 relative overflow-hidden">
         <GameMap
+          key={state.gameId ?? "map"}
           guessPin={state.guessPin}
           revealPin={revealPin}
           onMapClick={
@@ -374,9 +373,14 @@ export default function GamePage() {
                 Round {state.roundNumber} of {TOTAL_ROUNDS}
               </p>
               <p className="text-xs text-gray-500 mb-2.5">Where does this name come from?</p>
-              <p className="text-3xl font-extrabold text-white tracking-tight mb-3">
+              <p className="text-3xl font-extrabold text-white tracking-tight mb-2">
                 {state.currentName}
               </p>
+              {state.nameMeaning && (
+                <p className="text-gray-400 text-xs leading-relaxed mb-3 italic">
+                  {state.nameMeaning}
+                </p>
+              )}
 
               {state.hint ? (
                 <div className="flex items-center justify-center gap-1.5 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2">

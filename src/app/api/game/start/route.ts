@@ -1,12 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
-import { setGame } from "@/lib/gameStore";
+import { setGame, storeFull } from "@/lib/gameStore";
 import { generateName } from "@/lib/gameUtils";
 import { TOTAL_ROUNDS } from "@/lib/gameConstants";
 import { getRandomCultures } from "@/lib/cultures";
+import { rateLimit, getIp } from "@/lib/rateLimit";
 import type { GameRound } from "@/types/game";
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+  const ip = getIp(req);
+  if (!rateLimit(`start:${ip}`, 5, 60_000))
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+
+  if (storeFull())
+    return NextResponse.json({ error: "Server busy. Please try again shortly." }, { status: 503 });
+
   try {
     const cultures = getRandomCultures(TOTAL_ROUNDS);
     const { name, meaning, notes } = await generateName(cultures[0]);
@@ -22,7 +30,7 @@ export async function POST() {
       createdAt: Date.now(),
     });
 
-    return NextResponse.json({ gameId, name });
+    return NextResponse.json({ gameId, name, meaning });
   } catch (err) {
     console.error("[game/start]", err);
     return NextResponse.json({ error: "Failed to start game." }, { status: 500 });

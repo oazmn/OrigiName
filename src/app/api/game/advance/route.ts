@@ -1,14 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGame, setGame } from "@/lib/gameStore";
 import { generateName } from "@/lib/gameUtils";
+import { rateLimit, getIp } from "@/lib/rateLimit";
 import type { GameRound } from "@/types/game";
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function POST(req: NextRequest) {
+  const ip = getIp(req);
+  if (!rateLimit(`advance:${ip}`, 15, 60_000))
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+
   try {
-    const { gameId }: { gameId: string } = await req.json();
+    const { gameId } = await req.json();
+
+    if (typeof gameId !== "string" || !UUID.test(gameId))
+      return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
 
     const game = getGame(gameId);
     if (!game) return NextResponse.json({ error: "Game not found." }, { status: 404 });
+
+    const currentRound = game.rounds[game.currentRound];
+    if (!currentRound || currentRound.score === undefined)
+      return NextResponse.json({ error: "Current round not yet submitted." }, { status: 409 });
 
     game.currentRound += 1;
 
@@ -24,7 +38,7 @@ export async function POST(req: NextRequest) {
     game.rounds.push(nextRound);
     setGame(game);
 
-    return NextResponse.json({ roundNumber: game.currentRound + 1, name });
+    return NextResponse.json({ roundNumber: game.currentRound + 1, name, meaning });
   } catch (err) {
     console.error("[game/advance]", err);
     return NextResponse.json({ error: "Failed to load next round." }, { status: 500 });

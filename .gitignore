@@ -3,3 +3,14 @@ node_modules/
 .env.local
 .env*.local
 *.pem
+
+# macOS
+.DS_Store
+
+# Internal working documents (not part of the codebase)
+PROGRESS.md
+design_brief.md
+Claude.md
+
+# Claude Code agent configs
+.claude/agents/

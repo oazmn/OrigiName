@@ -1,10 +1,12 @@
 import type { CompletedRound } from "@/types/game";
 import { TOTAL_ROUNDS } from "@/lib/gameConstants";
+import LegalFooter from "@/components/LegalFooter";
 
 interface Props {
   totalScore: number;
   completedRounds: CompletedRound[];
   onPlayAgain: () => void;
+  onHome: () => void;
 }
 
 function getGrade(pct: number): { letter: string; label: string; gradient: string } {
@@ -27,7 +29,7 @@ function scoreBg(s: number) {
   return "bg-red-500/10 border-red-500/20";
 }
 
-export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain }: Props) {
+export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, onHome }: Props) {
   const maxScore = TOTAL_ROUNDS * 1000;
   const pct = Math.round((totalScore / maxScore) * 100);
   const grade = getGrade(pct);
@@ -105,21 +107,22 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain }
           ))}
         </div>
 
-        <button
-          onClick={onPlayAgain}
-          className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] shadow-2xl shadow-violet-500/30 hover:shadow-violet-500/50 text-base"
-        >
-          Play Again →
-        </button>
-
-        <div className="text-center mt-5">
-          <a
-            href="/"
-            className="text-gray-600 hover:text-gray-400 text-sm transition-colors duration-200"
+        <div className="flex gap-3">
+          <button
+            onClick={onHome}
+            className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-gray-300 font-semibold py-4 rounded-2xl transition-all duration-300 text-base"
           >
             ← Home
-          </a>
+          </button>
+          <button
+            onClick={onPlayAgain}
+            className="flex-[2] bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] shadow-2xl shadow-violet-500/30 hover:shadow-violet-500/50 text-base"
+          >
+            Play Again →
+          </button>
         </div>
+
+        <LegalFooter />
       </div>
     </div>
   );
