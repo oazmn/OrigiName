@@ -1,5 +1,4 @@
-# NameGuessr
-
+# OrigiName
 A GeoGuessr-style guessing game for given names. Claude generates an authentic first name from a culture somewhere in the world, gives you a short meaning hint, and you drop a pin on a world map to guess where the name comes from. The closer your pin, the higher your score.
 
 ## Aim of the project
