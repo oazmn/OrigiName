@@ -36,7 +36,7 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, 
             🌍
           </div>
           <h1 className="text-4xl font-extrabold text-white tracking-tight">
-            Name<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">Guessr</span>
+            Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
           </h1>
           <p className="text-gray-500 text-sm mt-2">Game complete!</p>
         </div>

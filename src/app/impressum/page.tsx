@@ -1,7 +1,7 @@
 import LegalPage from "@/components/LegalPage";
 
 export const metadata = {
-  title: "Impressum · NameGuessr",
+  title: "Impressum · Originame",
 };
 
 export default function Impressum() {

@@ -1,7 +1,7 @@
 import LegalPage from "@/components/LegalPage";
 
 export const metadata = {
-  title: "Datenschutz · NameGuessr",
+  title: "Datenschutz · Originame",
 };
 
 export default function Datenschutz() {
@@ -22,7 +22,7 @@ export default function Datenschutz() {
 
       <h2>2. Welche Daten wir verarbeiten</h2>
       <p>
-        NameGuessr speichert keine Nutzerkonten und erhebt keine personenbezogenen Daten über Registrierung oder Login. Bei jedem Aufruf der Website überträgt dein Browser technisch bedingt folgende Daten an unseren Server:
+        Originame speichert keine Nutzerkonten und erhebt keine personenbezogenen Daten über Registrierung oder Login. Bei jedem Aufruf der Website überträgt dein Browser technisch bedingt folgende Daten an unseren Server:
       </p>
       <ul>
         <li>IP-Adresse (wird nach Beendigung der Sitzung nicht persistent gespeichert)</li>

@@ -39,7 +39,7 @@ export default function LegalPage({ title, children }: Props) {
         </div>
 
         <p className="text-center text-gray-700 text-xs mt-8">
-          NameGuessr · Powered by Claude AI
+          Originame · Powered by Claude AI
         </p>
       </div>
     </div>
