@@ -1,3 +1,5 @@
+export const TOTAL_ROUNDS = 3;
+
 export interface Culture {
   id: string;
   name: string;

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getGame, setGame, haversineKm, calculateScore, HINT_SCORE_CAP } from "@/lib/gameStore";
+import { getGame, setGame } from "@/lib/gameStore";
+import { haversineKm, calculateScore, HINT_SCORE_CAP } from "@/lib/scoreUtils";
 import { rateLimit, getIp } from "@/lib/rateLimit";
 import { isValidGameId } from "@/lib/validation";
 

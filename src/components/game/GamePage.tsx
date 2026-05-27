@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import ScoreScreen from "./ScoreScreen";
 import LegalFooter from "@/components/LegalFooter";
 import type { GamePhase, RoundResult, CompletedRound } from "@/types/game";
-import { TOTAL_ROUNDS } from "@/lib/gameConstants";
+import { TOTAL_ROUNDS } from "@/types/game";
 import { scoreColor, scoreLabel } from "@/lib/scoreUtils";
 
 const GameMap = dynamic(() => import("./GameMap"), { ssr: false });

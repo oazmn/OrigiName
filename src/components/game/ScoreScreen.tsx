@@ -1,5 +1,5 @@
 import type { CompletedRound } from "@/types/game";
-import { TOTAL_ROUNDS } from "@/lib/gameConstants";
+import { TOTAL_ROUNDS } from "@/types/game";
 import { scoreColor, scoreBg } from "@/lib/scoreUtils";
 import LegalFooter from "@/components/LegalFooter";
 

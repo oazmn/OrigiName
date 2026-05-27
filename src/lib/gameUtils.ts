@@ -1,12 +1,16 @@
 import { getClient } from "@/lib/anthropic";
+import { buildNameGenerationPrompt } from "@/lib/gamePrompts";
+import { getNameFromPool } from "@/lib/namePool";
+import type { Culture } from "@/types/game";
 
 const strip = (s: string) => s.replace(/<[^>]*>/g, "").trim();
-import { buildNameGenerationPrompt } from "@/lib/gamePrompts";
-import type { Culture } from "@/types/game";
 
 export async function generateName(
   culture: Culture
 ): Promise<{ name: string; pronunciation: string; meaning: string; notes: string }> {
+  const poolEntry = getNameFromPool(culture);
+  if (poolEntry) return poolEntry;
+
   const client = getClient();
   const res = await client.messages.create({
     model: "claude-sonnet-4-6",

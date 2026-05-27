@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 import { setGame, storeFull } from "@/lib/gameStore";
 import { generateName } from "@/lib/gameUtils";
-import { TOTAL_ROUNDS } from "@/lib/gameConstants";
+import { TOTAL_ROUNDS } from "@/types/game";
 import { getRandomCultures } from "@/lib/cultures";
 import { rateLimit, getIp } from "@/lib/rateLimit";
 import type { GameRound } from "@/types/game";
