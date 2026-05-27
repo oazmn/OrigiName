@@ -8,7 +8,7 @@ const g = global as typeof globalThis & {
 if (!g._gameStore) g._gameStore = new Map();
 const store = g._gameStore;
 
-const TTL = 60 * 60 * 1000; // 1 hour
+const TTL = 20 * 60 * 1000; // 20 minutes — sufficient for a 3-round game
 const SESSION_CAP = 10_000;
 
 if (!g._gameStoreSweep) {

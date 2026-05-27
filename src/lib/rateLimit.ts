@@ -1,3 +1,5 @@
+import { createHash } from "crypto";
+
 // Simple in-memory sliding-window rate limiter.
 // Works per-process — swap the store for Upstash Redis for multi-instance production.
 const g = global as typeof globalThis & {
@@ -32,10 +34,17 @@ export function rateLimit(key: string, limit: number, windowMs: number): boolean
 
 // On Vercel, x-vercel-forwarded-for is injected by the platform and cannot be
 // spoofed by the client. x-real-ip is the fallback for other proxy setups.
+// When neither is present (local dev, non-Vercel proxies), a weak browser fingerprint
+// is used so all users don't share one rate-limit bucket.
 export function getIp(req: Request): string {
-  return (
-    req.headers.get("x-vercel-forwarded-for") ??
-    req.headers.get("x-real-ip") ??
-    "unknown"
-  );
+  const vercelIp = req.headers.get("x-vercel-forwarded-for");
+  if (vercelIp) return vercelIp.split(",")[0].trim();
+
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp;
+
+  console.warn("[rateLimit] No IP header found; using browser fingerprint for rate-limit key");
+  const ua = req.headers.get("user-agent") ?? "";
+  const lang = req.headers.get("accept-language") ?? "";
+  return "fp:" + createHash("sha256").update(ua + lang).digest("hex").slice(0, 16);
 }

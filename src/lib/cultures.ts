@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import type { Culture } from "@/types/game";
 
 export const CULTURES: Culture[] = [
@@ -152,6 +153,10 @@ export const CULTURES: Culture[] = [
 ];
 
 export function getRandomCultures(n: number): Culture[] {
-  const shuffled = [...CULTURES].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, n);
+  const arr = [...CULTURES];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = randomInt(0, i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(0, n);
 }

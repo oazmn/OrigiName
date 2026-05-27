@@ -1,4 +1,6 @@
 import { getClient } from "@/lib/anthropic";
+
+const strip = (s: string) => s.replace(/<[^>]*>/g, "").trim();
 import { buildNameGenerationPrompt } from "@/lib/gamePrompts";
 import type { Culture } from "@/types/game";
 
@@ -16,10 +18,10 @@ export async function generateName(
   try {
     const parsed = JSON.parse(json);
     return {
-      name: parsed.name ?? "Unknown",
-      pronunciation: parsed.pronunciation ?? "",
-      meaning: parsed.meaning ?? "",
-      notes: parsed.notes ?? "",
+      name: strip(parsed.name ?? "Unknown"),
+      pronunciation: strip(parsed.pronunciation ?? ""),
+      meaning: strip(parsed.meaning ?? ""),
+      notes: strip(parsed.notes ?? ""),
     };
   } catch {
     return { name: "Unknown", pronunciation: "", meaning: "", notes: "" };
