@@ -6,7 +6,7 @@ A GeoGuessr-style guessing game for given names. Claude generates an authentic f
 Two goals, equally weighted:
 
 1. **Learn AI fluency in practice** My Aim is to learn about AI fluency through practical experience, shipping a real app that depends on an LLM for its core gameplay loop. That means writing prompts that produce reliable structured output round after round, designing around model failure modes (parse errors, hallucinated meanings, leaked geographic clues), keeping API costs and latency sane, and figuring out where a model belongs in a stack versus where plain code does the job better.
-2. **Build something with cultural value.** A lot of AI demos are throwaway. This one tries to be the opposite: a small, replayable game that gets people to encounter names - and the cultures behind them, that they probably haven't met before. The pool deliberately spans 61 cultures across 20 regions, weighted away from celebrity names and toward what an ordinary person from that culture might actually be called, so each round teaches you something true about a place.
+2. **Build something with cultural value.** A lot of AI demos are throwaway. This one tries to be the opposite: a small, replayable game that gets people to encounter names - and the cultures behind them, that they probably haven't met before. The pool deliberately spans 113 cultures across 21 regions, weighted away from celebrity names and toward what an ordinary person from that culture might actually be called, so each round teaches you something true about a place.
 
 ## The game
 
