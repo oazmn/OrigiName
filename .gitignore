@@ -18,5 +18,4 @@ Claude.md
 # Internal working documents and unbuilt assets
 NAME_DATABASE_PLAN.txt
 NAME_DATABASE_PROMPTS.txt
-src/lib/nameDatabase.json
 src/lib/namePool.ts
