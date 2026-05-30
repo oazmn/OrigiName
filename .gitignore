@@ -12,10 +12,13 @@ PROGRESS.md
 design_brief.md
 Claude.md
 
-# Claude Code agent configs
+# Claude Code configs
 .claude/agents/
+.claude/settings.local.json
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
 
 # Internal working documents and unbuilt assets
 NAME_DATABASE_PLAN.txt
 NAME_DATABASE_PROMPTS.txt
-src/lib/namePool.ts
