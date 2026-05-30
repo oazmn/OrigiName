@@ -10,7 +10,7 @@ Two goals, equally weighted:
 
 ## The game
 
-**Heritage Analyser** is a three-round name geography game. Each round, Claude invents an authentic given name from a randomly chosen culture and writes you two things: a short *meaning* hint (shown before you guess) and a longer *cultural note* (revealed after you guess).
+**Heritage Analyser** is a three-round name geography game. Each round, a name is drawn from a curated database of 4,771 authentic given names spanning 113 cultures — and you get two things with it: a short *meaning* hint (shown before you guess) and a longer *cultural note* (revealed after you guess). For any culture not yet covered by the database, Claude generates the name and notes on the fly.
 
 The meaning hint is deliberately scrubbed of geographic clues. It will tell you the name "evokes radiant, shining light" but never that it comes from Arabic, North Africa, or the Maghreb — that would give the game away. You have to reason from the name's sound and the imagery alone.
 
