@@ -76,15 +76,16 @@ function ContentDE() {
 
       <h2>4. Drittanbieter</h2>
 
-      <h3>Stadia Maps Kartendienst</h3>
+      <h3>CARTO Kartendienst</h3>
       <p>
-        Die interaktive Weltkarte wird über Kartenkacheln von Stadia Maps (Stadia Maps, LLC,
-        USA) bereitgestellt. Beim Laden der Karte wird deine IP-Adresse an Stadia-Maps-Server
-        übertragen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.
+        Die interaktive Weltkarte wird über Kartenkacheln von CARTO (CartoDB, Inc.,
+        201 Moore St, Brooklyn, NY 11206, USA) bereitgestellt. Beim Laden der Karte
+        wird deine IP-Adresse an CARTO-Server übertragen. Rechtsgrundlage:
+        Art. 6 Abs. 1 lit. f DSGVO.
       </p>
       <p>
-        <a href="https://stadiamaps.com/privacy-policy/" target="_blank" rel="noopener noreferrer">
-          Datenschutzerklärung von Stadia Maps
+        <a href="https://carto.com/privacy" target="_blank" rel="noopener noreferrer">
+          Datenschutzerklärung von CARTO
         </a>
       </p>
 
@@ -173,15 +174,15 @@ function ContentEN() {
 
       <h2>4. Third-party services</h2>
 
-      <h3>Stadia Maps Map Service</h3>
+      <h3>CARTO Map Service</h3>
       <p>
-        The interactive world map is provided via map tiles from Stadia Maps (Stadia Maps,
-        LLC, USA). When the map loads, your IP address is transmitted to Stadia Maps'
-        servers. Legal basis: Art. 6(1)(f) GDPR.
+        The interactive world map is provided via map tiles from CARTO (CartoDB, Inc.,
+        201 Moore St, Brooklyn, NY 11206, USA). When the map loads, your IP address is
+        transmitted to CARTO's servers. Legal basis: Art. 6(1)(f) GDPR.
       </p>
       <p>
-        <a href="https://stadiamaps.com/privacy-policy/" target="_blank" rel="noopener noreferrer">
-          Stadia Maps Privacy Policy
+        <a href="https://carto.com/privacy" target="_blank" rel="noopener noreferrer">
+          CARTO Privacy Policy
         </a>
       </p>
 
