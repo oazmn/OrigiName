@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 interface Props {
   title: string;
@@ -21,7 +20,7 @@ export default function LegalPage({ title, children }: Props) {
         </Link>
 
         <div className="mb-8">
-          <Image src="/logo.svg" alt="Originame" width={48} height={48} className="rounded-xl mb-4 shadow-lg shadow-violet-500/30" />
+          <img src="/OrigiName/logo.svg" alt="Originame" className="w-12 h-12 rounded-xl mb-4 shadow-lg shadow-violet-500/30" />
           <h1 className="text-3xl font-extrabold tracking-tight">{title}</h1>
         </div>
 
