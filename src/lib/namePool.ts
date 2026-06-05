@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import db from "./nameDatabase.json";
 import type { Culture } from "@/types/game";
 
@@ -7,5 +8,6 @@ const pool = db as Record<string, NameEntry[]>;
 export function getNameFromPool(culture: Culture): NameEntry | null {
   const entries = pool[culture.id];
   if (!entries?.length) return null;
-  return entries[Math.floor(Math.random() * entries.length)];
+  // Use a cryptographically-random index so name selection is not predictable.
+  return entries[randomInt(0, entries.length)];
 }

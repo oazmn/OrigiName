@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { CompletedRound } from "@/types/game";
 import { TOTAL_ROUNDS } from "@/types/game";
 import { scoreColor, scoreBg } from "@/lib/scoreUtils";
@@ -18,6 +21,91 @@ function getGrade(pct: number): { letter: string; label: string; gradient: strin
   return              { letter: "D", label: "Keep Practising",  gradient: "from-gray-400 to-gray-500" };
 }
 
+function buildShareText(
+  totalScore: number,
+  maxScore: number,
+  grade: ReturnType<typeof getGrade>,
+  rounds: CompletedRound[]
+): string {
+  const url = typeof window !== "undefined" ? window.location.origin : "https://originame.dev";
+  const lines = rounds
+    .map((r) => `${r.name} · ${r.cultureName} · +${r.score}`)
+    .join("\n");
+  return [
+    "🌍 Originame — Can you beat my score?",
+    "",
+    lines,
+    "",
+    `${totalScore.toLocaleString()} / ${maxScore.toLocaleString()} · Grade ${grade.letter} (${grade.label})`,
+    "",
+    url,
+  ].join("\n");
+}
+
+function ShareButton({
+  totalScore,
+  maxScore,
+  grade,
+  rounds,
+}: {
+  totalScore: number;
+  maxScore: number;
+  grade: ReturnType<typeof getGrade>;
+  rounds: CompletedRound[];
+}) {
+  const [state, setState] = useState<"idle" | "copied">("idle");
+
+  async function handleShare() {
+    const text = buildShareText(totalScore, maxScore, grade, rounds);
+    const url = typeof window !== "undefined" ? window.location.origin : "";
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Originame — Can you beat my score?",
+          text,
+          url,
+        });
+      } catch {
+        // user cancelled native share — do nothing
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setState("copied");
+      setTimeout(() => setState("idle"), 2000);
+    } catch {
+      // clipboard denied — silently ignore
+    }
+  }
+
+  return (
+    <button
+      onClick={handleShare}
+      className="w-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-violet-500/40 text-gray-300 hover:text-white font-semibold py-3.5 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+    >
+      {state === "copied" ? (
+        <>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span className="text-emerald-400">Copied to clipboard!</span>
+        </>
+      ) : (
+        <>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+            <polyline points="16 6 12 2 8 6" />
+            <line x1="12" y1="2" x2="12" y2="15" />
+          </svg>
+          <span>Share</span>
+        </>
+      )}
+    </button>
+  );
+}
 
 export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, onHome }: Props) {
   const maxScore = TOTAL_ROUNDS * 1000;
@@ -32,9 +120,7 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, 
 
       <div className="max-w-lg w-full relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-2xl shadow-violet-500/40 mb-5 text-4xl ring-1 ring-white/10">
-            🌍
-          </div>
+          <img src="/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl shadow-2xl shadow-violet-500/40 mb-5 ring-1 ring-white/10" />
           <h1 className="text-4xl font-extrabold text-white tracking-tight">
             Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
           </h1>
@@ -71,7 +157,7 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, 
           <p className="text-xs text-gray-600 mt-1.5 text-right">{pct}%</p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden mb-6 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden mb-4 shadow-2xl">
           {completedRounds.map((r, i) => (
             <div
               key={i}
@@ -95,6 +181,15 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, 
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mb-3">
+          <ShareButton
+            totalScore={totalScore}
+            maxScore={maxScore}
+            grade={grade}
+            rounds={completedRounds}
+          />
         </div>
 
         <div className="flex gap-3">

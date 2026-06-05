@@ -208,13 +208,8 @@ export default function GamePage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-purple-900/10 blur-3xl pointer-events-none" />
 
         <div className="max-w-sm w-full text-center relative z-10">
-          <div className="relative inline-flex mb-7">
-            <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-2xl shadow-violet-500/40 flex items-center justify-center text-5xl ring-1 ring-white/10">
-              🌍
-            </div>
-            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center ring-2 ring-gray-950">
-              <span className="text-xs">🎮</span>
-            </div>
+          <div className="inline-flex mb-7">
+            <img src="/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl shadow-2xl shadow-violet-500/40 ring-1 ring-white/10" />
           </div>
 
           <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight mb-3">
@@ -280,9 +275,7 @@ export default function GamePage() {
       <div className="min-h-screen bg-gray-950 flex items-center justify-center relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-3xl pointer-events-none" />
         <div className="text-center relative z-10">
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-4xl mx-auto mb-6 shadow-2xl shadow-violet-500/30 ring-1 ring-white/10 animate-pulse">
-            🌍
-          </div>
+          <img src="/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl mx-auto mb-6 shadow-2xl shadow-violet-500/30 ring-1 ring-white/10 animate-pulse" />
           <p className="text-white font-semibold mb-4">Round 1 of {TOTAL_ROUNDS}</p>
           <div className="flex gap-1.5 justify-center mb-3">
             {[0, 1, 2].map((i) => (
@@ -313,9 +306,7 @@ export default function GamePage() {
       {/* ── Header ── */}
       <header className="h-14 shrink-0 flex items-center justify-between px-4 md:px-6 bg-black/50 backdrop-blur-md border-b border-white/5 z-10">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-sm shadow-lg shadow-violet-500/30">
-            🌍
-          </div>
+          <img src="/logo.svg" alt="Originame" className="w-7 h-7 rounded-lg shadow-lg shadow-violet-500/30" />
           <span className="font-bold text-white text-sm tracking-tight">
             Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
           </span>

@@ -3,7 +3,26 @@ import { buildNameGenerationPrompt } from "@/lib/gamePrompts";
 import { getNameFromPool } from "@/lib/namePool";
 import type { Culture } from "@/types/game";
 
+// Strip HTML tags to prevent stored XSS from AI-generated content.
 const strip = (s: string) => s.replace(/<[^>]*>/g, "").trim();
+
+// Hard caps on AI-returned field lengths. These bound the amount of untrusted text
+// stored in the in-memory session store and later echoed to clients.
+const FIELD_LIMITS = {
+  name: 80,
+  pronunciation: 120,
+  meaning: 400,
+  notes: 600,
+} as const;
+
+function truncate(s: string, max: number): string {
+  return s.length > max ? s.slice(0, max) : s;
+}
+
+function sanitiseField(raw: unknown, field: keyof typeof FIELD_LIMITS, fallback: string): string {
+  const s = typeof raw === "string" ? strip(raw) : fallback;
+  return truncate(s || fallback, FIELD_LIMITS[field]);
+}
 
 export async function generateName(
   culture: Culture
@@ -22,10 +41,10 @@ export async function generateName(
   try {
     const parsed = JSON.parse(json);
     return {
-      name: strip(parsed.name ?? "Unknown"),
-      pronunciation: strip(parsed.pronunciation ?? ""),
-      meaning: strip(parsed.meaning ?? ""),
-      notes: strip(parsed.notes ?? ""),
+      name: sanitiseField(parsed.name, "name", "Unknown"),
+      pronunciation: sanitiseField(parsed.pronunciation, "pronunciation", ""),
+      meaning: sanitiseField(parsed.meaning, "meaning", ""),
+      notes: sanitiseField(parsed.notes, "notes", ""),
     };
   } catch {
     return { name: "Unknown", pronunciation: "", meaning: "", notes: "" };

@@ -4,6 +4,7 @@ import { generateName } from "@/lib/gameUtils";
 import { rateLimit, getIp } from "@/lib/rateLimit";
 import { isValidGameId } from "@/lib/validation";
 import type { GameRound } from "@/types/game";
+import { TOTAL_ROUNDS } from "@/types/game";
 
 export async function POST(req: NextRequest) {
   const ip = getIp(req);
@@ -11,10 +12,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
 
   try {
-    const { gameId } = await req.json();
+    const body = await req.json();
+    const { gameId } = body;
 
     if (!isValidGameId(gameId))
       return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
+
+    // Per-game rate limit: a single session cannot call advance more times than there
+    // are rounds. This is a defence-in-depth guard against a single gameId being used
+    // to hammer the Claude API fallback via rapid advance calls.
+    if (!rateLimit(`advance-game:${gameId}`, TOTAL_ROUNDS, 30 * 60_000))
+      return NextResponse.json({ error: "Too many requests for this game." }, { status: 429 });
 
     const game = getGame(gameId);
     if (!game) return NextResponse.json({ error: "Game not found." }, { status: 404 });

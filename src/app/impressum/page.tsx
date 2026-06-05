@@ -7,33 +7,24 @@ export const metadata = {
 export default function Impressum() {
   return (
     <LegalPage title="Impressum">
-      <p className="text-amber-400/80 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3 text-xs mb-4">
-        <strong className="text-amber-300">Platzhalter</strong> — Bitte ersetze alle Felder in eckigen Klammern mit deinen echten Angaben, bevor die Seite live geht.
-      </p>
-
       <h2>Angaben gemäß § 5 TMG</h2>
       <p>
-        [Vor- und Nachname]<br />
-        [Straße und Hausnummer]<br />
-        [PLZ Ort]<br />
+        Olisa Zimmermann<br />
+        Bleichstraße 6<br />
+        60313 Frankfurt am Main<br />
         Deutschland
       </p>
 
       <h2>Kontakt</h2>
       <p>
-        E-Mail: <a href="mailto:[deine@email.de]">[deine@email.de]</a>
-      </p>
-      <p>
-        <em className="text-gray-600 text-xs">
-          Eine Telefonnummer ist nach § 5 TMG nicht zwingend erforderlich, erleichtert jedoch die Erreichbarkeit.
-        </em>
+        E-Mail: <a href="mailto:originame@protonmail.com">originame@protonmail.com</a>
       </p>
 
       <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <p>
-        [Vor- und Nachname]<br />
-        [Straße und Hausnummer]<br />
-        [PLZ Ort]
+        Olisa Zimmermann<br />
+        Bleichstraße 6<br />
+        60313 Frankfurt am Main
       </p>
 
       <h2>Haftung für Inhalte</h2>

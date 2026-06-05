@@ -32,18 +32,44 @@ export function rateLimit(key: string, limit: number, windowMs: number): boolean
   return true;
 }
 
-// On Vercel, x-vercel-forwarded-for is injected by the platform and cannot be
-// spoofed by the client. x-real-ip is the fallback for other proxy setups.
-// When neither is present (local dev, non-Vercel proxies), a weak browser fingerprint
-// is used so all users don't share one rate-limit bucket.
+// IP extraction priority:
+//
+// 1. x-vercel-forwarded-for — injected by the Vercel edge and CANNOT be spoofed by
+//    the client. Use this first when running on Vercel.
+//
+// 2. x-forwarded-for — set by most reverse proxies (nginx, Cloudflare, etc.).
+//    IMPORTANT: this header CAN be forged by a client when there is no trusted proxy
+//    in front of the server. Only trust it if you know a proxy strips/overwrites it.
+//    We take only the LAST entry (rightmost), which is appended by the nearest trusted
+//    proxy and cannot be faked by the client.
+//
+// 3. Fingerprint fallback — when no IP header is present (local dev, bare Node.js
+//    without a proxy). All requests from the same browser end up in the same bucket.
+//    Trivially bypassable by changing UA — only use in dev.
+//
+// Security note: on Vercel the rate limiter is fully reliable. On other deployments,
+// ensure a trusted reverse proxy is in place so that x-forwarded-for is set correctly.
 export function getIp(req: Request): string {
+  // Vercel-injected — authoritative, cannot be spoofed by the client.
   const vercelIp = req.headers.get("x-vercel-forwarded-for");
   if (vercelIp) return vercelIp.split(",")[0].trim();
 
-  const realIp = req.headers.get("x-real-ip");
-  if (realIp) return realIp;
+  // Take the rightmost IP from X-Forwarded-For, which is appended by the nearest proxy.
+  // A client can prepend arbitrary IPs but cannot fake the entry added by the proxy itself.
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const parts = forwarded.split(",");
+    const rightmost = parts[parts.length - 1].trim();
+    if (rightmost) return rightmost;
+  }
 
-  console.warn("[rateLimit] No IP header found; using browser fingerprint for rate-limit key");
+  // Last resort: browser fingerprint. Effective in dev; trivially bypassable in prod.
+  // Log a warning so operators know the rate limiter is in degraded mode.
+  console.warn(
+    "[rateLimit] No trusted IP header found. Rate limiting is using a browser " +
+    "fingerprint, which can be bypassed. Ensure a trusted reverse proxy sets " +
+    "X-Forwarded-For, or deploy on Vercel where x-vercel-forwarded-for is injected."
+  );
   const ua = req.headers.get("user-agent") ?? "";
   const lang = req.headers.get("accept-language") ?? "";
   return "fp:" + createHash("sha256").update(ua + lang).digest("hex").slice(0, 16);

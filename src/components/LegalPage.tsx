@@ -20,9 +20,7 @@ export default function LegalPage({ title, children }: Props) {
         </Link>
 
         <div className="mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-xl mb-4 shadow-lg shadow-violet-500/30">
-            🌍
-          </div>
+          <img src="/logo.svg" alt="Originame" className="w-12 h-12 rounded-xl mb-4 shadow-lg shadow-violet-500/30" />
           <h1 className="text-3xl font-extrabold tracking-tight">{title}</h1>
         </div>
 
