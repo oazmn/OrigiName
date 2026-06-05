@@ -1,4 +1,7 @@
 # OrigiName
+
+**[Play it live →](https://oazmn.github.io/OrigiName/)**
+
 A GeoGuessr-style guessing game for given names. Each round draws a real name from a curated database of 4,771 authentic given names spanning 113 cultures — you get a short meaning hint, then drop a pin on a world map to guess where the name comes from. The closer your pin, the higher your score.
 
 ## Aim of the project
@@ -10,7 +13,7 @@ Two goals, equally weighted:
 
 ## The game
 
-**OrigiName** is a three-round name geography game. Each round, a name is drawn at random from a pre-generated database of 4,771 authentic given names spanning 113 cultures — and you get two things with it: a short *meaning* hint (shown before you guess) and a longer *cultural note* (revealed after you guess). For any culture not yet covered by the database, Claude generates the name and notes on the fly as a fallback.
+**OrigiName** is a three-round name geography game. Each round, a name is drawn at random from a pre-generated database of 4,771 authentic given names spanning 113 cultures — and you get two things with it: a short *meaning* hint (shown before you guess) and a longer *cultural note* (revealed after you guess).
 
 The meaning hint is deliberately scrubbed of geographic clues. It will tell you the name "evokes radiant, shining light" but never that it comes from Arabic, North Africa, or the Maghreb — that would give the game away. You have to reason from the name's sound and the imagery alone.
 
