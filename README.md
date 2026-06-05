@@ -2,7 +2,7 @@
 
 **[Play it live →](https://oazmn.github.io/OrigiName/)**
 
-A GeoGuessr-style guessing game for given names. Each round draws a real name from a curated database of 4,771 authentic given names spanning 113 cultures — you get a short meaning hint, then drop a pin on a world map to guess where the name comes from. The closer your pin, the higher your score.
+A GeoGuessr-style guessing game for given names. Each round draws a real name from a curated database of 4,771 authentic given names spanning 113 cultures - you get a short meaning hint, then drop a pin on a world map to guess where the name comes from. The closer your pin, the higher your score.
 
 ## Aim of the project
 
