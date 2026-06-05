@@ -13,7 +13,7 @@ export function haversineKm(lat1: number, lng1: number, lat2: number, lng2: numb
 }
 
 export function calculateScore(distanceKm: number): number {
-  return Math.round(1000 * Math.exp(-distanceKm / 4000));
+  return Math.round(1000 * Math.exp(-distanceKm / 7000));
 }
 
 export function scoreColor(score: number): string {

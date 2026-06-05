@@ -14,10 +14,10 @@ interface Props {
 }
 
 function getGrade(pct: number): { letter: string; label: string; gradient: string } {
-  if (pct >= 90) return { letter: "S", label: "Legendary",       gradient: "from-amber-400 to-orange-400" };
-  if (pct >= 75) return { letter: "A", label: "Excellent",       gradient: "from-emerald-400 to-teal-400" };
-  if (pct >= 60) return { letter: "B", label: "Great",           gradient: "from-violet-400 to-purple-400" };
-  if (pct >= 45) return { letter: "C", label: "Good",            gradient: "from-sky-400 to-blue-400" };
+  if (pct >= 85) return { letter: "S", label: "Legendary",       gradient: "from-amber-400 to-orange-400" };
+  if (pct >= 70) return { letter: "A", label: "Excellent",       gradient: "from-emerald-400 to-teal-400" };
+  if (pct >= 50) return { letter: "B", label: "Great",           gradient: "from-violet-400 to-purple-400" };
+  if (pct >= 30) return { letter: "C", label: "Good",            gradient: "from-sky-400 to-blue-400" };
   return              { letter: "D", label: "Keep Practising",  gradient: "from-gray-400 to-gray-500" };
 }
 
