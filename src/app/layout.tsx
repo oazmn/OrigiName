@@ -7,6 +7,12 @@ const inter = Inter({ subsets: ["latin"], display: "swap" });
 export const metadata: Metadata = {
   title: "OrigiName",
   description: "A name appears from somewhere on Earth. Pin where you think it comes from and score points.",
+  icons: {
+    icon: [
+      { url: "/OrigiName/favicon.png", type: "image/png", sizes: "64x64" },
+      { url: "/OrigiName/icon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
