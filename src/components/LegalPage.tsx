@@ -20,7 +20,7 @@ export default function LegalPage({ title, children }: Props) {
         </Link>
 
         <div className="mb-8">
-          <img src="/OrigiName/logo.svg" alt="Originame" className="w-12 h-12 rounded-xl mb-4 shadow-lg shadow-violet-500/30" />
+          <img src="/OrigiName/logo.svg" alt="OrigiName" className="w-12 h-12 rounded-xl mb-4 shadow-lg shadow-violet-500/30" />
           <h1 className="text-3xl font-extrabold tracking-tight">{title}</h1>
         </div>
 
@@ -37,7 +37,7 @@ export default function LegalPage({ title, children }: Props) {
         </div>
 
         <p className="text-center text-gray-700 text-xs mt-8">
-          Originame · A name geography game
+          OrigiName · A name geography game
         </p>
       </div>
     </div>

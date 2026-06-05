@@ -32,7 +32,7 @@ function buildShareText(
     .map((r) => `${r.name} · ${r.cultureName} · +${r.score}`)
     .join("\n");
   return [
-    "🌍 Originame — Can you beat my score?",
+    "🌍 OrigiName — Can you beat my score?",
     "",
     lines,
     "",
@@ -62,7 +62,7 @@ function ShareButton({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Originame — Can you beat my score?",
+          title: "OrigiName — Can you beat my score?",
           text,
           url,
         });
@@ -120,9 +120,9 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, 
 
       <div className="max-w-lg w-full relative z-10">
         <div className="text-center mb-8">
-          <img src="/OrigiName/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl shadow-2xl shadow-violet-500/40 mb-5 ring-1 ring-white/10 mx-auto" />
+          <img src="/OrigiName/logo.svg" alt="OrigiName" className="w-20 h-20 rounded-3xl shadow-2xl shadow-violet-500/40 mb-5 ring-1 ring-white/10 mx-auto" />
           <h1 className="text-4xl font-extrabold text-white tracking-tight">
-            Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
+            Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">Name</span>
           </h1>
           <p className="text-gray-500 text-sm mt-2">Game complete!</p>
         </div>

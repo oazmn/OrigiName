@@ -48,7 +48,7 @@ function ContentDE() {
 
       <h2>2. Welche Daten wir verarbeiten</h2>
       <p>
-        Originame speichert keine Nutzerkonten und erhebt keine personenbezogenen Daten
+        OrigiName speichert keine Nutzerkonten und erhebt keine personenbezogenen Daten
         über Registrierung oder Login. Bei jedem Seitenaufruf überträgt dein Browser
         technisch bedingt folgende Daten an den Hosting-Server (GitHub Pages):
       </p>
@@ -147,7 +147,7 @@ function ContentEN() {
 
       <h2>2. Data we process</h2>
       <p>
-        Originame does not store user accounts and does not collect personal data through
+        OrigiName does not store user accounts and does not collect personal data through
         registration or login. Each time you visit the website, your browser automatically
         transmits the following data to the hosting server (GitHub Pages):
       </p>

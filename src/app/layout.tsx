@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Originame",
+  title: "OrigiName",
   description: "A name appears from somewhere on Earth. Pin where you think it comes from and score points.",
 };
 
