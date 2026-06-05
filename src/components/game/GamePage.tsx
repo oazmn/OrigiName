@@ -1,6 +1,7 @@
 "use client";
 import { useReducer, useCallback } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import ScoreScreen from "./ScoreScreen";
 import LegalFooter from "@/components/LegalFooter";
 import type { GamePhase, RoundResult, CompletedRound, Culture } from "@/types/game";
@@ -214,7 +215,7 @@ export default function GamePage() {
 
         <div className="max-w-sm w-full text-center relative z-10">
           <div className="inline-flex mb-7">
-            <img src="/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl shadow-2xl shadow-violet-500/40 ring-1 ring-white/10" />
+            <Image src="/logo.svg" alt="Originame" width={80} height={80} className="rounded-3xl shadow-2xl shadow-violet-500/40 ring-1 ring-white/10" />
           </div>
 
           <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight mb-3">
@@ -288,7 +289,7 @@ export default function GamePage() {
       {/* ── Header ── */}
       <header className="relative h-14 shrink-0 flex items-center justify-between px-4 md:px-6 bg-black/50 backdrop-blur-md z-10">
         <div className="flex items-center gap-2.5">
-          <img src="/logo.svg" alt="Originame" className="w-7 h-7 rounded-lg shadow-lg shadow-violet-500/30" />
+          <Image src="/logo.svg" alt="Originame" width={28} height={28} className="rounded-lg shadow-lg shadow-violet-500/30" />
           <span className="font-bold text-white text-sm tracking-tight">
             Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
           </span>

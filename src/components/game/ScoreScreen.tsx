@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { CompletedRound } from "@/types/game";
 import { TOTAL_ROUNDS } from "@/types/game";
 import { scoreColor, scoreBg } from "@/lib/scoreUtils";
@@ -120,7 +121,7 @@ export default function ScoreScreen({ totalScore, completedRounds, onPlayAgain, 
 
       <div className="max-w-lg w-full relative z-10">
         <div className="text-center mb-8">
-          <img src="/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl shadow-2xl shadow-violet-500/40 mb-5 ring-1 ring-white/10 mx-auto" />
+          <Image src="/logo.svg" alt="Originame" width={80} height={80} className="rounded-3xl shadow-2xl shadow-violet-500/40 mb-5 ring-1 ring-white/10 mx-auto" />
           <h1 className="text-4xl font-extrabold text-white tracking-tight">
             Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
           </h1>
