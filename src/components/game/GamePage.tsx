@@ -412,7 +412,7 @@ export default function GamePage() {
               />
             </div>
 
-            <div className="max-w-lg mx-auto px-5 py-4">
+            <div className="max-w-lg mx-auto px-5 pt-4 pb-8 md:py-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="flex items-baseline gap-2">
