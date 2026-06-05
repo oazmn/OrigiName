@@ -6,8 +6,8 @@ import LegalPage from "@/components/LegalPage";
 const NAME = "Olisa Zimmermann";
 const ADDRESS = "Bleichstraße 6, 60313 Frankfurt am Main, Deutschland";
 const EMAIL = "originame@protonmail.com";
-const DATE_DE = "30. Mai 2026";
-const DATE_EN = "30 May 2026";
+const DATE_DE = "5. Juni 2026";
+const DATE_EN = "5 June 2026";
 
 function LanguageToggle({
   lang,
@@ -49,45 +49,32 @@ function ContentDE() {
       <h2>2. Welche Daten wir verarbeiten</h2>
       <p>
         Originame speichert keine Nutzerkonten und erhebt keine personenbezogenen Daten
-        über Registrierung oder Login. Bei jedem Aufruf der Website überträgt dein Browser
-        technisch bedingt folgende Daten an unseren Server:
+        über Registrierung oder Login. Bei jedem Seitenaufruf überträgt dein Browser
+        technisch bedingt folgende Daten an den Hosting-Server (GitHub Pages):
       </p>
       <ul>
-        <li>IP-Adresse (wird nach Beendigung der Sitzung nicht persistent gespeichert)</li>
+        <li>IP-Adresse</li>
         <li>Datum und Uhrzeit des Abrufs</li>
         <li>Browsertyp und -version</li>
         <li>Betriebssystem</li>
         <li>Referrer-URL</li>
       </ul>
       <p>
-        Diese Daten werden ausschließlich zum Betrieb der Website benötigt
-        (Art. 6 Abs. 1 lit. f DSGVO – berechtigtes Interesse).
+        Diese Daten werden von GitHub gemäß deren Datenschutzrichtlinie verarbeitet.
+        Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO – berechtigtes Interesse.
       </p>
 
       <h2>3. Spielsitzungen</h2>
       <p>
-        Während einer Spielrunde werden die Spielzüge (Namensanzeige, Kartenklicks,
-        Punktestand) temporär im Arbeitsspeicher des Servers gehalten. Diese Daten werden{" "}
-        <strong>nicht dauerhaft gespeichert</strong> und gehen beim Beenden der Sitzung
-        oder beim Server-Neustart verloren. Es werden keine Cookies zu Tracking-Zwecken
-        gesetzt.
+        Das Spiel läuft vollständig in deinem Browser. Spielzüge (Namensanzeige,
+        Kartenklicks, Punktestand) werden ausschließlich lokal im Arbeitsspeicher deines
+        Geräts gehalten und <strong>niemals an einen Server übertragen</strong>. Mit dem
+        Schließen des Browser-Tabs gehen alle Spieldaten verloren. Die Namensdatenbank
+        ist fest in die Website eingebettet und wird beim Laden der Seite einmalig
+        übertragen.
       </p>
 
       <h2>4. Drittanbieter</h2>
-
-      <h3>Anthropic Claude API</h3>
-      <p>
-        Zur Generierung von Spielnamen nutzen wir die Claude API von Anthropic, PBC
-        (548 Market St, PMB 90375, San Francisco, CA 94104, USA). Dabei werden Anfragen
-        an die Anthropic-Server übertragen. Für Spielanfragen werden keine
-        personenbezogenen Daten an Anthropic übermittelt – die Anfragen enthalten nur
-        spielinterne Parameter (Kulturangabe). Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.
-      </p>
-      <p>
-        <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer">
-          Datenschutzerklärung von Anthropic
-        </a>
-      </p>
 
       <h3>CARTO Kartendienst</h3>
       <p>
@@ -132,9 +119,9 @@ function ContentDE() {
 
       <h2>6. Cookies</h2>
       <p>
-        Diese Website setzt keine Tracking- oder Analyse-Cookies. Technisch notwendige
-        Session-Daten werden ausschließlich serverseitig im Arbeitsspeicher gehalten und
-        nicht als Cookie im Browser gespeichert.
+        Diese Website setzt keine Cookies – weder zu Tracking- noch zu technischen Zwecken.
+        Da das Spiel vollständig clientseitig läuft, werden keinerlei spielbezogene Daten
+        serverseitig gespeichert.
       </p>
 
       <h2>7. Aktualität und Änderungen</h2>
@@ -162,42 +149,30 @@ function ContentEN() {
       <p>
         Originame does not store user accounts and does not collect personal data through
         registration or login. Each time you visit the website, your browser automatically
-        transmits the following data to our server:
+        transmits the following data to the hosting server (GitHub Pages):
       </p>
       <ul>
-        <li>IP address (not stored persistently after the session ends)</li>
+        <li>IP address</li>
         <li>Date and time of the request</li>
         <li>Browser type and version</li>
         <li>Operating system</li>
         <li>Referrer URL</li>
       </ul>
       <p>
-        This data is used solely to operate the website (Art. 6(1)(f) GDPR – legitimate
-        interest).
+        This data is processed by GitHub in accordance with their privacy policy.
+        Legal basis: Art. 6(1)(f) GDPR – legitimate interest.
       </p>
 
       <h2>3. Game sessions</h2>
       <p>
-        During a game round, your moves (name display, map clicks, score) are held
-        temporarily in server memory. This data is{" "}
-        <strong>not stored persistently</strong> and is lost when the session ends or
-        the server restarts. No tracking cookies are set.
+        The game runs entirely in your browser. Game moves (name display, map clicks,
+        score) are held exclusively in your device's local memory and are{" "}
+        <strong>never transmitted to any server</strong>. All game data is lost when you
+        close the browser tab. The name database is embedded in the website and
+        transferred once when the page loads.
       </p>
 
       <h2>4. Third-party services</h2>
-
-      <h3>Anthropic Claude API</h3>
-      <p>
-        To generate game names we use the Claude API by Anthropic, PBC (548 Market St,
-        PMB 90375, San Francisco, CA 94104, USA). Requests are transmitted to Anthropic's
-        servers. No personal data is included in game requests — they contain only
-        in-game parameters (culture name). Legal basis: Art. 6(1)(f) GDPR.
-      </p>
-      <p>
-        <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer">
-          Anthropic Privacy Policy
-        </a>
-      </p>
 
       <h3>CARTO Map Service</h3>
       <p>
@@ -241,9 +216,9 @@ function ContentEN() {
 
       <h2>6. Cookies</h2>
       <p>
-        This website sets no tracking or analytics cookies. Technically necessary session
-        data is held exclusively in server memory and is not stored as a cookie in your
-        browser.
+        This website sets no cookies — neither for tracking nor for technical purposes.
+        Since the game runs entirely client-side, no game-related data is stored
+        server-side.
       </p>
 
       <h2>7. Updates</h2>

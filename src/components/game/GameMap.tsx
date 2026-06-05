@@ -103,23 +103,6 @@ export default function GameMap({ guessPin, revealPin, onMapClick }: GameMapProp
         )}
       </MapContainer>
 
-      {/* Zoom controls */}
-      <div className="absolute bottom-20 right-3 z-[1000] flex flex-col gap-1">
-        <button
-          onClick={() => mapRef.current?.zoomIn()}
-          aria-label="Zoom in"
-          className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-950/90 backdrop-blur-md border border-white/10 text-white text-lg leading-none hover:bg-white/10 active:scale-95 transition-all shadow-xl"
-        >
-          +
-        </button>
-        <button
-          onClick={() => mapRef.current?.zoomOut()}
-          aria-label="Zoom out"
-          className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-950/90 backdrop-blur-md border border-white/10 text-white text-lg leading-none hover:bg-white/10 active:scale-95 transition-all shadow-xl"
-        >
-          −
-        </button>
-      </div>
     </div>
   );
 }

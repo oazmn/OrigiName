@@ -286,7 +286,7 @@ export default function GamePage() {
     <div className="h-screen flex flex-col bg-gray-950 overflow-hidden">
 
       {/* ── Header ── */}
-      <header className="h-14 shrink-0 flex items-center justify-between px-4 md:px-6 bg-black/50 backdrop-blur-md border-b border-white/5 z-10">
+      <header className="relative h-14 shrink-0 flex items-center justify-between px-4 md:px-6 bg-black/50 backdrop-blur-md z-10">
         <div className="flex items-center gap-2.5">
           <img src="/logo.svg" alt="Originame" className="w-7 h-7 rounded-lg shadow-lg shadow-violet-500/30" />
           <span className="font-bold text-white text-sm tracking-tight">
@@ -294,7 +294,7 @@ export default function GamePage() {
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5">
           {Array.from({ length: TOTAL_ROUNDS }, (_, i) => (
             <div
               key={i}
@@ -373,7 +373,7 @@ export default function GamePage() {
 
         {/* Click hint */}
         {isGuessing && !state.guessPin && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
+          <div className="absolute bottom-32 md:bottom-20 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
             <p className="text-gray-400 text-xs bg-gray-950/80 backdrop-blur-sm px-4 py-2 rounded-full border border-white/8 shadow-lg">
               Click anywhere on the map
             </p>
@@ -382,7 +382,7 @@ export default function GamePage() {
 
         {/* Submit button */}
         {(isGuessing || isSubmitting) && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
+          <div className="absolute bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 z-[1000]">
             <button
               onClick={submitGuess}
               disabled={!state.guessPin || isSubmitting}
