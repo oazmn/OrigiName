@@ -218,7 +218,7 @@ export default function GamePage() {
           </div>
 
           <h1 className="text-5xl sm:text-6xl font-extrabold text-white tracking-tight mb-3">
-            Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">name</span>
+            Origi<span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">Name</span>
           </h1>
           <p className="text-gray-400 text-sm leading-relaxed mb-8 px-2">
             A name appears from somewhere on Earth. Pin where you think it comes from and score points.
