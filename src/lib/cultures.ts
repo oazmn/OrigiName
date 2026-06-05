@@ -1,4 +1,3 @@
-import { randomInt } from "crypto";
 import type { Culture } from "@/types/game";
 
 export const CULTURES: Culture[] = [
@@ -152,10 +151,18 @@ export const CULTURES: Culture[] = [
   { id: "romanian",     name: "Romanian",           region: "Eastern Europe",  lat: 45.5,  lng: 25.0  },
 ];
 
+export function broadContinent(region: string): string {
+  if (region.includes("Africa")) return "Africa";
+  if (["Mesoamerica", "South America"].includes(region)) return "the Americas";
+  if (region === "Pacific") return "Oceania & the Pacific";
+  if (["Western Europe", "Northern Europe", "Eastern Europe", "Southern Europe", "British Isles", "Central Europe"].includes(region)) return "Europe";
+  return "Asia";
+}
+
 export function getRandomCultures(n: number): Culture[] {
   const arr = [...CULTURES];
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = randomInt(0, i + 1);
+    const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr.slice(0, n);

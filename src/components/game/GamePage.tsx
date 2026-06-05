@@ -3,64 +3,74 @@ import { useReducer, useCallback } from "react";
 import dynamic from "next/dynamic";
 import ScoreScreen from "./ScoreScreen";
 import LegalFooter from "@/components/LegalFooter";
-import type { GamePhase, RoundResult, CompletedRound } from "@/types/game";
+import type { GamePhase, RoundResult, CompletedRound, Culture } from "@/types/game";
 import { TOTAL_ROUNDS } from "@/types/game";
-import { scoreColor, scoreLabel } from "@/lib/scoreUtils";
+import { scoreColor, scoreLabel, haversineKm, calculateScore, HINT_SCORE_CAP } from "@/lib/scoreUtils";
+import { getRandomCultures, broadContinent } from "@/lib/cultures";
+import { getNameFromPool } from "@/lib/namePool";
 
 const GameMap = dynamic(() => import("./GameMap"), { ssr: false });
 
 interface GameState {
   phase: GamePhase;
-  gameId: string | null;
+  cultures: Culture[];
   roundNumber: number;
   currentName: string | null;
   currentPronunciation: string | null;
   nameMeaning: string | null;
+  currentNotes: string | null;
   guessPin: { lat: number; lng: number } | null;
   roundResult: RoundResult | null;
   totalScore: number;
   completedRounds: CompletedRound[];
   hint: string | null;
+  hintUsed: boolean;
   hintLoading: boolean;
   error: string | null;
 }
 
 type Action =
-  | { type: "START" }
-  | { type: "GAME_LOADED"; gameId: string; name: string; pronunciation: string; meaning: string }
+  | { type: "GAME_LOADED"; cultures: Culture[]; name: string; pronunciation: string; meaning: string; notes: string }
   | { type: "MAP_CLICKED"; lat: number; lng: number }
   | { type: "SUBMIT" }
   | { type: "ROUND_RESULT"; result: RoundResult }
-  | { type: "ADVANCE" }
-  | { type: "NEXT_ROUND_LOADED"; roundNumber: number; name: string; pronunciation: string; meaning: string }
+  | { type: "NEXT_ROUND_LOADED"; roundNumber: number; name: string; pronunciation: string; meaning: string; notes: string }
   | { type: "GAME_OVER" }
-  | { type: "HINT_LOADING" }
   | { type: "HINT_RECEIVED"; hint: string }
   | { type: "ERROR"; error: string }
   | { type: "RESET" };
 
 const initial: GameState = {
   phase: "menu",
-  gameId: null,
+  cultures: [],
   roundNumber: 1,
   currentName: null,
   currentPronunciation: null,
   nameMeaning: null,
+  currentNotes: null,
   guessPin: null,
   roundResult: null,
   totalScore: 0,
   completedRounds: [],
   hint: null,
+  hintUsed: false,
   hintLoading: false,
   error: null,
 };
 
 function reducer(state: GameState, action: Action): GameState {
   switch (action.type) {
-    case "START":
-      return { ...initial, phase: "loading" };
     case "GAME_LOADED":
-      return { ...initial, phase: "guessing", gameId: action.gameId, roundNumber: 1, currentName: action.name, currentPronunciation: action.pronunciation, nameMeaning: action.meaning };
+      return {
+        ...initial,
+        phase: "guessing",
+        cultures: action.cultures,
+        roundNumber: 1,
+        currentName: action.name,
+        currentPronunciation: action.pronunciation,
+        nameMeaning: action.meaning,
+        currentNotes: action.notes,
+      };
     case "MAP_CLICKED":
       if (state.phase !== "guessing") return state;
       return { ...state, guessPin: { lat: action.lat, lng: action.lng } };
@@ -83,8 +93,6 @@ function reducer(state: GameState, action: Action): GameState {
           },
         ],
       };
-    case "ADVANCE":
-      return { ...state, phase: "advancing" };
     case "NEXT_ROUND_LOADED":
       return {
         ...state,
@@ -93,15 +101,15 @@ function reducer(state: GameState, action: Action): GameState {
         currentName: action.name,
         currentPronunciation: action.pronunciation,
         nameMeaning: action.meaning,
+        currentNotes: action.notes,
         guessPin: null,
         roundResult: null,
         hint: null,
+        hintUsed: false,
         hintLoading: false,
       };
-    case "HINT_LOADING":
-      return { ...state, hintLoading: true };
     case "HINT_RECEIVED":
-      return { ...state, hint: action.hint, hintLoading: false };
+      return { ...state, hint: action.hint, hintUsed: true, hintLoading: false };
     case "GAME_OVER":
       return { ...state, phase: "done" };
     case "ERROR":
@@ -113,79 +121,76 @@ function reducer(state: GameState, action: Action): GameState {
   }
 }
 
-
 export default function GamePage() {
   const [state, dispatch] = useReducer(reducer, initial);
 
-  const startGame = useCallback(async () => {
-    dispatch({ type: "START" });
-    try {
-      const res = await fetch("/api/game/start", { method: "POST" });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      dispatch({ type: "GAME_LOADED", gameId: data.gameId, name: data.name, pronunciation: data.pronunciation ?? "", meaning: data.meaning ?? "" });
-    } catch {
-      dispatch({ type: "ERROR", error: "Failed to start game. Please try again." });
-    }
+  const startGame = useCallback(() => {
+    const cultures = getRandomCultures(TOTAL_ROUNDS);
+    const entry = getNameFromPool(cultures[0]);
+    dispatch({
+      type: "GAME_LOADED",
+      cultures,
+      name: entry?.name ?? "Unknown",
+      pronunciation: entry?.pronunciation ?? "",
+      meaning: entry?.meaning ?? "",
+      notes: entry?.notes ?? "",
+    });
   }, []);
 
-  const submitGuess = useCallback(async () => {
-    if (!state.guessPin || !state.gameId) return;
+  const submitGuess = useCallback(() => {
+    if (!state.guessPin || !state.cultures.length) return;
     dispatch({ type: "SUBMIT" });
-    try {
-      const res = await fetch("/api/game/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gameId: state.gameId, lat: state.guessPin.lat, lng: state.guessPin.lng }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      dispatch({ type: "ROUND_RESULT", result: data });
-    } catch {
-      dispatch({ type: "ERROR", error: "Failed to submit guess. Please try again." });
-    }
-  }, [state.guessPin, state.gameId]);
+    const culture = state.cultures[state.roundNumber - 1];
+    const distanceKm = haversineKm(state.guessPin.lat, state.guessPin.lng, culture.lat, culture.lng);
+    const rawScore = calculateScore(distanceKm);
+    const score = state.hintUsed ? Math.min(rawScore, HINT_SCORE_CAP) : rawScore;
+    const newTotal = state.totalScore + score;
+    const isLastRound = state.roundNumber === TOTAL_ROUNDS;
 
-  const advance = useCallback(async () => {
-    if (!state.gameId || !state.roundResult) return;
+    const result: RoundResult = {
+      score,
+      distanceKm,
+      correctLat: culture.lat,
+      correctLng: culture.lng,
+      cultureName: culture.name,
+      cultureRegion: culture.region,
+      name: state.currentName ?? "",
+      meaning: state.nameMeaning ?? "",
+      notes: state.currentNotes ?? "",
+      isLastRound,
+      totalScore: newTotal,
+      hintUsed: state.hintUsed,
+    };
+    dispatch({ type: "ROUND_RESULT", result });
+  }, [state.guessPin, state.cultures, state.roundNumber, state.totalScore, state.hintUsed, state.currentName, state.nameMeaning, state.currentNotes]);
+
+  const advance = useCallback(() => {
+    if (!state.roundResult) return;
     if (state.roundResult.isLastRound) {
       dispatch({ type: "GAME_OVER" });
       return;
     }
-    dispatch({ type: "ADVANCE" });
-    try {
-      const res = await fetch("/api/game/advance", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gameId: state.gameId }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      if (data.done) {
-        dispatch({ type: "GAME_OVER" });
-      } else {
-        dispatch({ type: "NEXT_ROUND_LOADED", roundNumber: data.roundNumber, name: data.name, pronunciation: data.pronunciation ?? "", meaning: data.meaning ?? "" });
-      }
-    } catch {
-      dispatch({ type: "ERROR", error: "Failed to load next round. Please try again." });
-    }
-  }, [state.gameId, state.roundResult]);
+    const nextRoundNumber = state.roundNumber + 1;
+    const nextCulture = state.cultures[nextRoundNumber - 1];
+    const entry = getNameFromPool(nextCulture);
+    dispatch({
+      type: "NEXT_ROUND_LOADED",
+      roundNumber: nextRoundNumber,
+      name: entry?.name ?? "Unknown",
+      pronunciation: entry?.pronunciation ?? "",
+      meaning: entry?.meaning ?? "",
+      notes: entry?.notes ?? "",
+    });
+  }, [state.roundResult, state.roundNumber, state.cultures]);
 
-  const getHint = useCallback(async () => {
-    if (!state.gameId || state.hint || state.hintLoading) return;
-    dispatch({ type: "HINT_LOADING" });
-    try {
-      const res = await fetch("/api/game/hint", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gameId: state.gameId }),
-      });
-      const data = await res.json();
-      dispatch({ type: "HINT_RECEIVED", hint: res.ok ? data.hint : "" });
-    } catch {
-      dispatch({ type: "HINT_RECEIVED", hint: "" });
-    }
-  }, [state.gameId, state.hint, state.hintLoading]);
+  const getHint = useCallback(() => {
+    if (state.hintUsed || state.hint !== null) return;
+    const culture = state.cultures[state.roundNumber - 1];
+    dispatch({
+      type: "HINT_RECEIVED",
+      hint: `This name originates from ${broadContinent(culture.region)}.`,
+    });
+  }, [state.hintUsed, state.hint, state.cultures, state.roundNumber]);
 
   // ── Done ──────────────────────────────────────────────────────────────────
   if (state.phase === "done") {
@@ -269,29 +274,6 @@ export default function GamePage() {
     );
   }
 
-  // ── Loading first round ────────────────────────────────────────────────────
-  if (state.phase === "loading") {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-3xl pointer-events-none" />
-        <div className="text-center relative z-10">
-          <img src="/logo.svg" alt="Originame" className="w-20 h-20 rounded-3xl mx-auto mb-6 shadow-2xl shadow-violet-500/30 ring-1 ring-white/10 animate-pulse" />
-          <p className="text-white font-semibold mb-4">Round 1 of {TOTAL_ROUNDS}</p>
-          <div className="flex gap-1.5 justify-center mb-3">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="w-2.5 h-2.5 bg-violet-400 rounded-full animate-bounce"
-                style={{ animationDelay: `${i * 0.15}s` }}
-              />
-            ))}
-          </div>
-          <p className="text-gray-500 text-sm">Generating your name…</p>
-        </div>
-      </div>
-    );
-  }
-
   // ── Guessing / Submitting / Revealing / Advancing ─────────────────────────
   const isGuessing = state.phase === "guessing";
   const isSubmitting = state.phase === "submitting";
@@ -336,7 +318,7 @@ export default function GamePage() {
       {/* ── Map area ── */}
       <div className="flex-1 relative overflow-hidden">
         <GameMap
-          key={state.gameId ?? "map"}
+          key={state.roundNumber}
           guessPin={state.guessPin}
           revealPin={revealPin}
           onMapClick={
