@@ -16,6 +16,7 @@
     "react-leaflet": "^4.2.1"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/leaflet": "^1.9.12",
     "@types/node": "^22.0.0",
