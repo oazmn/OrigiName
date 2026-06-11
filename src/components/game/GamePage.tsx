@@ -329,8 +329,8 @@ export default function GamePage() {
         {/* Name overlay */}
         {(isGuessing || isSubmitting) && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] w-full max-w-xs px-4">
-            <div className="bg-gray-950/92 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-center shadow-2xl shadow-black/60 ring-1 ring-white/5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-600 mb-1">
+            <div className="bg-gray-950/98 supports-[backdrop-filter:blur(1px)]:backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-center shadow-2xl shadow-black/60 ring-1 ring-white/5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-1">
                 Round {state.roundNumber} of {TOTAL_ROUNDS}
               </p>
               <p className="text-xs text-gray-500 mb-2.5">Where does this name come from?</p>
